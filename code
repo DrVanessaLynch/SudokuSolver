@@ -5,11 +5,13 @@ import time
 start = time.time()
 
 # Function to generate possible values of each box: 1 to size of sudoku (dim)
+# And put those possible values in each square of the sudoku
 def setup(dim):
-    nn = n * n
-    valueoptions = list(range(1,n+1))
-    a = set(valueoptions)
-    mtx = np.array(a).repeat(nn).reshape(n,n)
+    valueoptions = list(range(1, dim + 1))
+    a = set(valueoptions)  # a now contains a set of values from 1 to dim
+    
+    squares = dim * dim
+    mtx = np.array(a).repeat(squares).reshape(dim, dim)
     print(mtx)
     return(mtx);
 
@@ -28,8 +30,33 @@ subq = int(subq)    # Converts it to an integer
 print("Values of this sudoku range from 1 to ", dim, " with ", subq, " x ", subq, " subquadrants making up the board")
 
 # Total squares on the board
-squares = dim * dim 
+#squares = dim * dim 
 
 # Make a set with all possible values for the squares
-posval = list(range(1, dim + 1))
-values = set(pv)
+#posval = list(range(1, dim + 1))
+#values = set(pv)
+
+print("Initializing sudoku board....")
+mtx = setup(dim)  # Call the setup function to create our initial matrix with all possible solutions in each square
+print(mtx)
+
+# Make a copy of the initial mtx for comparison later
+mtxcheck = np.copy(mtx)
+print("Matrix copy")
+print(mtxcheck)
+
+# Input values given for the sudoku
+print("Input starting known values.....")  # Update later
+
+#Enter Sudoku Starting Values
+mtx[0,0]={2}
+mtx[0,3]={3}
+mtx[1,2]={2}
+mtx[1,3]={4}
+mtx[2,0]={3}
+mtx[2,2]={4}
+mtx[3,0]={4}
+mtx[3,3]={2}
+
+print("The array we will be solving is: ")
+print(mtx)
