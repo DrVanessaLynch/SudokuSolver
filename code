@@ -16,12 +16,26 @@ def setup(dim):
     return(mtx);
 
 # Function to input the known grid values
-def knownval(sudoku):
-    return;  #Finish later
+#def knownval(mtx):
+#    counter = input("How many initial points are given in the sudoku? ")
+#    counter = int(counter)
+#    print(counter, " data points will be entered")
+#    print("Please enter all data points using x as the vertical axis and y as the horizontal axis") 
+#    print("beginning at the upper left with coordinates x = 1 and y = 1")
+#    print("The lower right corner would then be x = ", dim, "and y = ", dim)
+#    r = 1
+#    while r in range(1, counter + 1):
+#        xcoord = int(input("Enter x coordinate of point")) - 1  # Enter x and y coordinates, convert to an integer 
+#        ycoord = int(input("Enter y coordinate of point")) - 1  # And shift the values by -1 to account for how the code labels positions
+#        mtx[xcoord,ycoord] = set(int(input("Enter value at point (x,y)")) 
+#        #print("mtx[", xcoord, ",", ycoord, "] = ", mtx[xcoord,ycoord])
+#        r = r + 1
+#    print(mtx)    
+#    return(mtx);  #Finish later
 
-# Input the dimensions of the sudoku 
-dim = input("Enter the value of the exterior dimension of the symmetric sudoku you wish to solve :: ")
-dim = int(dim)  #converts to an integer
+# Input the dimensions of the sudoku and convert it to an integer 
+dim = int(input("Enter the value of the exterior dimension of the symmetric sudoku you wish to solve :: "))
+
 
 # Determine the dimensions of the subquadrants
 # For a 4x4 sudoku, the subquadrants would be 2x2
@@ -47,9 +61,11 @@ print("Matrix copy")
 print(mtxcheck)
 
 # Input values given for the sudoku
-print("Input starting known values.....")  # Update later
+print("Input starting known values.....")  
 
 #Enter Sudoku Starting Values
+#mtx = knownval(mtx)
+#e = 0
 mtx[0,0]={2}
 mtx[0,3]={3}
 mtx[1,2]={2}
@@ -58,6 +74,25 @@ mtx[2,0]={3}
 mtx[2,2]={4}
 mtx[3,0]={4}
 mtx[3,3]={2}
+
+# Initialize counters
+i = 0
+j = 0
+                                 
+#counter = int(input("How many initial points are given in the sudoku? "))
+#print(counter, " data points will be entered")
+#print("Please enter all data points using x as the vertical axis and y as the horizontal axis") 
+#print("beginning at the upper left with coordinates x = 1 and y = 1")
+#print("The lower right corner would then be x = ", dim, "and y = ", dim)
+    
+#r = 1
+#while r in range(1, counter + 1):
+#    xcoord = int(input("Enter x coordinate of point")) - 1  # Enter x and y coordinates, convert to an integer 
+#    ycoord = int(input("Enter y coordinate of point")) - 1  # And shift the values by -1 to account for how the code labels positions
+#    mtx[xcoord,ycoord] = set(input("Enter value at point (x,y)") 
+#    print("r = ", r, " mtx[", xcoord, ",", ycoord, "] = ", mtx[xcoord,ycoord])
+#    r += 1 
+   
 
 print("The array we will be solving is: ")
 print(mtx)
@@ -71,10 +106,8 @@ print(mtxcheck)
 # repeat the loop to see if further solving can be done.
 
 while (np.array_equal(mtx, mtxcheck) == False):
-    print("We need to keep working....")
-    
-    # Make a new copy of the sudoku matrix
-    mtxcheck = np.copy(mtx)  
+    print("We need to keep working....") 
+    mtxcheck = np.copy(mtx)  # Make a new copy of the sudoku matrix
     print("mtxcheck", mtxcheck)
 
     #Remove duplicate options in rows, columns and subquadrants
@@ -99,12 +132,16 @@ while (np.array_equal(mtx, mtxcheck) == False):
             
                 # Determine the range in x and y of that subquadrant
                 # by first finding the min of that range
-                xmin = int(xprime + subq)
-                ymin = int(yprime + subq)
+                xmin = xprime + subq
+                xmin = int(xmin)
+                ymin = yprime + subq
+                ymin = int(ymin)
                 
                 # Now we find the max of that range
-                xmax = int(xmin + subq)
-                ymax = int(ymin + subq)
+                xmax = xmin + subq
+                xmax = int(xmax)
+                ymax = ymin + subq
+                ymax = int(ymax)
             
                 # Now we can remove duplicate elements from the subquadrant
                 if i in range(xmin, xmax):
@@ -127,6 +164,9 @@ while (np.array_equal(mtx, mtxcheck) == False):
 
 while (np.array_equal(mtx, mtxcheck) == True):
     print("We have done all we can do here")
+    # Need to check if the sudoku is solved.
+    # If yes, exit and print final solution
+    # If no, use branching technique to continue solving and return here to check
     break    
     
 print("mtx final")
