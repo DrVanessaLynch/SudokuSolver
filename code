@@ -62,79 +62,82 @@ mtx[3,3]={2}
 print("The array we will be solving is: ")
 print(mtx)
 
-# Initialize our counters (for loops later) 
-i = 0
-j = 0
+print("mtxcheck")
+print(mtxcheck)
 
 # Begin cycle to check progress on solving
 # Save a new copy of the matrix (mtxcheck) at the beginning and end of loop
 # If differences occur, meaning the values of the matrix changed,
 # repeat the loop to see if further solving can be done.
 
+while (np.array_equal(mtx, mtxcheck) == False):
+    print("We need to keep working....")
+    
+    # Make a new copy of the sudoku matrix
+    mtxcheck = np.copy(mtx)  
+    print("mtxcheck", mtxcheck)
 
+    #Remove duplicate options in rows, columns and subquadrants
 
-#Remove duplicate options in rows, columns and subquadrants
+    # If the length of the set in each array position is 1, 
+    # then remove that element from the remaining sets in 
+    # the corresponding section, row, and column.
 
-# If the length of the set in each array position is 1, 
-# then remove that element from the remaining sets in 
-# the corresponding section, row, and column.
-
-for x in range(0, dim):
-    for y in range(0, dim):
+    for x in range(0, dim):
+        for y in range(0, dim):
         
-        # Make a new copy of the sudoku matrix
-        mtxcheck = np.copy(mtx)  
+            # If the length of the set in the array position mtx[x,y] is 1,
+            # the solution for that position is known.
         
-        # If the length of the set in the array position mtx[x,y] is 1,
-        # the solution for that position is known.
-        
-        if len(mtx[x,y])==1: # If a set only has one element
-            a = mtx[x,y] # Save point for use later
-            print("Working....")
-            print("x = ", x, "y = ", y)
-            print("Matrix currently...", mtx[x,y])
+            if len(mtx[x,y])==1: # If a set only has one element
+                a = mtx[x,y] # Save point for use later
+                print("Working....")
             
-            # Determine the subquadrant that the set with a single value (a) is in
-            xprime = x // subq
-            yprime = y // subq
+                # Determine the subquadrant that the set with a single value (a) is in
+                xprime = x // subq
+                yprime = y // subq
             
-            print("xprime = ", xprime)
-            print("yprime = ", yprime)
+                # Determine the range in x and y of that subquadrant
+                # by first finding the min of that range
+                xmin = int(xprime + subq)
+                ymin = int(yprime + subq)
+                
+                # Now we find the max of that range
+                xmax = int(xmin + subq)
+                ymax = int(ymin + subq)
             
-            # Determine the range in x and y of that subquadrant
-            # by first finding the min of that range
-            xmin = int(xprime + subq)
-            ymin = int(yprime + subq)
+                # Now we can remove duplicate elements from the subquadrant
+                if i in range(xmin, xmax):
+                    if j in range(ymin, ymax):
+                        if not i==x and j==y:
+                            mtx[i,j] = mtx[i,j] - a
             
-            print("xmin = ", xmin)
-            print("ymin = ", ymin)
+                # Now remove duplicates in the corresponding row and column of x,y
             
-            # Now we find the max of that range
-            xmax = int(xmin + subq)
-            ymax = int(ymin + subq)
-            
-            print("xmax = ", xmax)
-            print("ymax = ", ymax)
-            
-            # Now we can remove duplicate elements from the subquadrant
-            if i in range(xmin, xmax):
-                if j in range(ymin, ymax):
-                    if not i==x and j==y:
-                        mtx[i,j] = mtx[i,j] - a
-                        
-            print(mtx)
-            
-            # Now remove duplicates in the corresponding row and column of x,y
-            
-            for i in range(0, dim):
-                if i!= x:
-                    mtx[i,y] = mtx[i,y] - a
-            for j in range(0, dim):
-                if j!= y:
-                    mtx[x,j] = mtx[x,j] - a
+                for i in range(0, dim):
+                    if i!= x:
+                        mtx[i,y] = mtx[i,y] - a
+                for j in range(0, dim):
+                    if j!= y:
+                        mtx[x,j] = mtx[x,j] - a
                     
-            print(mtx)
+                print("mtx", mtx) 
             
+    continue
+
+while (np.array_equal(mtx, mtxcheck) == True):
+    print("We have done all we can do here")
+    break    
+    
+print("mtx final")
+print(mtx)
+print("mtxcheck final")
+print(mtxcheck)
+
+#mtxdiff = np.setdiff1d(mtx,mtxdiff)
+#print("mtxdiff")
+#print(np.setdiff1d(mtx,mtxcheck))
+
             
             
 print("******************************")
@@ -144,4 +147,3 @@ print("******************************")
 
 end = time.time()
 print("Time to run (in seconds): {}".format(end - start))
-
