@@ -81,6 +81,9 @@ j = 0
 for x in range(0, dim):
     for y in range(0, dim):
         
+        # Make a new copy of the sudoku matrix
+        mtxcheck = np.copy(mtx)  
+        
         # If the length of the set in the array position mtx[x,y] is 1,
         # the solution for that position is known.
         
@@ -109,3 +112,34 @@ for x in range(0, dim):
             xmax = int(xmin + subq)
             ymax = int(ymin + subq)
             
+            print("xmax = ", xmax)
+            print("ymax = ", ymax)
+            
+            # Now we can remove duplicate elements from the subquadrant
+            if i in range(xmin, xmax):
+                if j in range(ymin, ymax):
+                    if not i==x and j==y:
+                        mtx[i,j] = mtx[i,j] - a
+                        
+            print(mtx)
+            
+            # Now remove duplicates in the corresponding row and column of x,y
+            
+            for i in range(0, dim):
+                if i!= x:
+                    mtx[i,y] = mtx[i,y] - a
+            for j in range(0, dim):
+                if j!= y:
+                    mtx[x,j] = mtx[x,j] - a
+                    
+            print(mtx)
+            
+            
+            
+print("******************************")
+print("The solution to the puzzle is")
+print(sudsol) 
+print("******************************")
+
+end = time.time()
+print("Time to run (in seconds): {}".format(end - start))
