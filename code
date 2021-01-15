@@ -1,4 +1,4 @@
-import numpy as np
+iimport numpy as np
 import time 
 
 # Lets keep track of how fast the sudoku solver is
@@ -65,33 +65,38 @@ print("Input starting known values.....")
 
 #Enter Sudoku Starting Values
 #mtx = knownval(mtx)
-#e = 0
-mtx[0,0]={2}
-mtx[0,3]={3}
-mtx[1,2]={2}
-mtx[1,3]={4}
-mtx[2,0]={3}
-mtx[2,2]={4}
-mtx[3,0]={4}
-mtx[3,3]={2}
+
+#xinput = int(input("Enter x value"))
+#yinput = int(input("Enter y value"))
+#sqval = int(input("Enter value of square"))
+#mtx[xinput,yinput]={2}
+#print(mtx[xinput,yinput])
+#mtx[0,3]={3}
+#mtx[1,2]={2}
+#mtx[1,3]={4}
+#mtx[2,0]={3}
+#mtx[2,2]={4}
+#mtx[3,0]={4}
+#mtx[3,3]={2}
 
 # Initialize counters
 i = 0
 j = 0
                                  
-#counter = int(input("How many initial points are given in the sudoku? "))
-#print(counter, " data points will be entered")
-#print("Please enter all data points using x as the vertical axis and y as the horizontal axis") 
-#print("beginning at the upper left with coordinates x = 1 and y = 1")
-#print("The lower right corner would then be x = ", dim, "and y = ", dim)
+counter = int(input("How many initial points are given in the sudoku? "))
+print(counter, " data points will be entered.")
+print("Please enter all data points using x as the vertical axis and y as the horizontal axis") 
+print("beginning at the upper left with coordinates x = 1 and y = 1")
+print("The lower right corner would then be x = ", dim, "and y = ", dim)
     
-#r = 1
-#while r in range(1, counter + 1):
-#    xcoord = int(input("Enter x coordinate of point")) - 1  # Enter x and y coordinates, convert to an integer 
-#    ycoord = int(input("Enter y coordinate of point")) - 1  # And shift the values by -1 to account for how the code labels positions
-#    mtx[xcoord,ycoord] = set(input("Enter value at point (x,y)") 
-#    print("r = ", r, " mtx[", xcoord, ",", ycoord, "] = ", mtx[xcoord,ycoord])
-#    r += 1 
+r = 1
+for r in range(1, counter + 1):
+    xinput = int(input("Enter x value")) - 1    # Enter x and y coordinates, convert to an integer
+    yinput = int(input("Enter y value")) - 1
+    sqval = int(input("Enter value of square"))
+    mtx[xinput,yinput] = {sqval}
+    print(xinput, yinput)
+    print(mtx)
    
 
 print("The array we will be solving is: ")
@@ -174,11 +179,7 @@ print(mtx)
 print("mtxcheck final")
 print(mtxcheck)
 
-#mtxdiff = np.setdiff1d(mtx,mtxdiff)
-#print("mtxdiff")
-#print(np.setdiff1d(mtx,mtxcheck))
 
-            
             
 print("******************************")
 print("The solution to the puzzle is")
