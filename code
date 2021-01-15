@@ -1,4 +1,4 @@
-iimport numpy as np
+import numpy as np
 import time 
 
 # Lets keep track of how fast the sudoku solver is
@@ -6,36 +6,34 @@ start = time.time()
 
 # Function to generate possible values of each box: 1 to size of sudoku (dim)
 # And put those possible values in each square of the sudoku
+
 def setup(dim):
     valueoptions = list(range(1, dim + 1))
     a = set(valueoptions)  # a now contains a set of values from 1 to dim
-    
     squares = dim * dim
     mtx = np.array(a).repeat(squares).reshape(dim, dim)
-    print(mtx)
     return(mtx);
 
 # Function to input the known grid values
-#def knownval(mtx):
-#    counter = input("How many initial points are given in the sudoku? ")
-#    counter = int(counter)
-#    print(counter, " data points will be entered")
-#    print("Please enter all data points using x as the vertical axis and y as the horizontal axis") 
-#    print("beginning at the upper left with coordinates x = 1 and y = 1")
-#    print("The lower right corner would then be x = ", dim, "and y = ", dim)
-#    r = 1
-#    while r in range(1, counter + 1):
-#        xcoord = int(input("Enter x coordinate of point")) - 1  # Enter x and y coordinates, convert to an integer 
-#        ycoord = int(input("Enter y coordinate of point")) - 1  # And shift the values by -1 to account for how the code labels positions
-#        mtx[xcoord,ycoord] = set(int(input("Enter value at point (x,y)")) 
-#        #print("mtx[", xcoord, ",", ycoord, "] = ", mtx[xcoord,ycoord])
-#        r = r + 1
-#    print(mtx)    
-#    return(mtx);  #Finish later
+def knownval(mtx):
+    counter = int(input("How many initial points are given in the sudoku? "))
+    print(counter, " data points will be entered.")
+    print("Please enter all data points using x as the vertical axis and y as the horizontal axis") 
+    print("beginning at the upper left with coordinates x = 1 and y = 1")
+    print("The lower right corner would then be x = ", dim, "and y = ", dim)
+    
+    r = 1
+    for r in range(1, counter + 1):
+        xinput = int(input("Enter x value")) - 1    # Enter x and y coordinates, convert to an integer
+        yinput = int(input("Enter y value")) - 1
+        sqval = int(input("Enter value of square"))
+        mtx[xinput,yinput] = {sqval}
+        print(xinput, yinput)
+        print(mtx)
+    return(mtx);  #Finish later
 
 # Input the dimensions of the sudoku and convert it to an integer 
 dim = int(input("Enter the value of the exterior dimension of the symmetric sudoku you wish to solve :: "))
-
 
 # Determine the dimensions of the subquadrants
 # For a 4x4 sudoku, the subquadrants would be 2x2
@@ -44,67 +42,31 @@ subq = int(subq)    # Converts it to an integer
 print("Values of this sudoku range from 1 to ", dim, " with ", subq, " x ", subq, " subquadrants making up the board")
 
 # Total squares on the board
-squares = dim * dim 
+#squares = dim * dim 
 
 # Make a set with all possible values for the squares
-possval = list(range(1, dim + 1))
-values = set(possval)
+#possval = list(range(1, dim + 1))
+#values = set(possval)
 
 print("Initializing sudoku board....")
-#mtx = setup(dim)  # Call the setup function to create our initial matrix with all possible solutions in each square
-mtx = np.array(values).repeat(squares).reshape(dim, dim)
-print(mtx)
+mtx = setup(dim)  # Call the setup function to create our initial matrix with all possible solutions in each square
 
 # Make a copy of the initial mtx for comparison later
 mtxcheck = np.copy(mtx)
-print("Matrix copy")
-print(mtxcheck)
 
 # Input values given for the sudoku
 print("Input starting known values.....")  
 
 #Enter Sudoku Starting Values
-#mtx = knownval(mtx)
-
-#xinput = int(input("Enter x value"))
-#yinput = int(input("Enter y value"))
-#sqval = int(input("Enter value of square"))
-#mtx[xinput,yinput]={2}
-#print(mtx[xinput,yinput])
-#mtx[0,3]={3}
-#mtx[1,2]={2}
-#mtx[1,3]={4}
-#mtx[2,0]={3}
-#mtx[2,2]={4}
-#mtx[3,0]={4}
-#mtx[3,3]={2}
-
-# Initialize counters
-i = 0
-j = 0
-                                 
-counter = int(input("How many initial points are given in the sudoku? "))
-print(counter, " data points will be entered.")
-print("Please enter all data points using x as the vertical axis and y as the horizontal axis") 
-print("beginning at the upper left with coordinates x = 1 and y = 1")
-print("The lower right corner would then be x = ", dim, "and y = ", dim)
-    
-r = 1
-for r in range(1, counter + 1):
-    xinput = int(input("Enter x value")) - 1    # Enter x and y coordinates, convert to an integer
-    yinput = int(input("Enter y value")) - 1
-    sqval = int(input("Enter value of square"))
-    mtx[xinput,yinput] = {sqval}
-    print(xinput, yinput)
-    print(mtx)
-   
+mtx = knownval(mtx)
 
 print("The array we will be solving is: ")
 print(mtx)
 
-print("mtxcheck")
-print(mtxcheck)
-
+# Initialize counters
+i = 0
+j = 0
+ 
 # Begin cycle to check progress on solving
 # Save a new copy of the matrix (mtxcheck) at the beginning and end of loop
 # If differences occur, meaning the values of the matrix changed,
@@ -113,7 +75,6 @@ print(mtxcheck)
 while (np.array_equal(mtx, mtxcheck) == False):
     print("We need to keep working....") 
     mtxcheck = np.copy(mtx)  # Make a new copy of the sudoku matrix
-    print("mtxcheck", mtxcheck)
 
     #Remove duplicate options in rows, columns and subquadrants
 
@@ -161,10 +122,7 @@ while (np.array_equal(mtx, mtxcheck) == False):
                         mtx[i,y] = mtx[i,y] - a
                 for j in range(0, dim):
                     if j!= y:
-                        mtx[x,j] = mtx[x,j] - a
-                    
-                print("mtx", mtx) 
-            
+                        mtx[x,j] = mtx[x,j] - a            
     continue
 
 while (np.array_equal(mtx, mtxcheck) == True):
@@ -174,12 +132,6 @@ while (np.array_equal(mtx, mtxcheck) == True):
     # If no, use branching technique to continue solving and return here to check
     break    
     
-print("mtx final")
-print(mtx)
-print("mtxcheck final")
-print(mtxcheck)
-
-
             
 print("******************************")
 print("The solution to the puzzle is")
