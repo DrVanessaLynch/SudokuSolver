@@ -30,8 +30,52 @@ def knownval(mtx):
         mtx[xinput,yinput] = {sqval}
         print(xinput, yinput)
         print(mtx)
-    return(mtx);  #Finish later
+    return(mtx);  
 
+# Determine the subquadrant that (x,y) is in and the range of x and y values of that subquadrant
+def findsubq(x,y,subq):
+    # Find subquadrants
+    xprime = x // subq     
+    yprime = y // subq
+                        
+    # Determine the range in x and y of that subquadrant
+    # by first finding the min of that range
+    xmin = xprime + subq
+    xmin = int(xmin)
+    ymin = yprime + subq
+    ymin = int(ymin)
+                
+    # Now we find the max of that range
+    xmax = xmin + subq
+    xmax = int(xmax)
+    ymax = ymin + subq
+    ymax = int(ymax)
+    
+    return(xmin, xmax, ymin, ymax);
+
+# Remove duplicate elements from the subquadrant
+def remsubq(xmin,xmax,ymin,ymax,mtx,a):
+    if i in range(xmin, xmax):
+        if j in range(ymin, ymax):
+            if not i==x and j==y:
+                mtx[i,j] = mtx[i,j] - a
+    return(mtx);
+
+# Now remove duplicates in the corresponding column of x
+def remxval(dim, x, y, a, mtx):
+    for i in range(0, dim):
+        if i!= x:
+            mtx[i,y] = mtx[i,y] - a
+    return(mtx);
+            
+# Now remove duplicates in the corresponding row of y            
+def remyval(dim, x, y, a, mtx):            
+    for j in range(0, dim):
+        if j!= y:
+            mtx[x,j] = mtx[x,j] - a  
+    return(mtx);
+    
+                            
 # Input the dimensions of the sudoku and convert it to an integer 
 dim = int(input("Enter the value of the exterior dimension of the symmetric sudoku you wish to solve :: "))
 
@@ -41,12 +85,6 @@ subq = np.sqrt(dim) # Takes a square root
 subq = int(subq)    # Converts it to an integer
 print("Values of this sudoku range from 1 to ", dim, " with ", subq, " x ", subq, " subquadrants making up the board")
 
-# Total squares on the board
-#squares = dim * dim 
-
-# Make a set with all possible values for the squares
-#possval = list(range(1, dim + 1))
-#values = set(possval)
 
 print("Initializing sudoku board....")
 mtx = setup(dim)  # Call the setup function to create our initial matrix with all possible solutions in each square
@@ -91,38 +129,18 @@ while (np.array_equal(mtx, mtxcheck) == False):
             if len(mtx[x,y])==1: # If a set only has one element
                 a = mtx[x,y] # Save point for use later
                 print("Working....")
-            
-                # Determine the subquadrant that the set with a single value (a) is in
-                xprime = x // subq
-                yprime = y // subq
-            
-                # Determine the range in x and y of that subquadrant
-                # by first finding the min of that range
-                xmin = xprime + subq
-                xmin = int(xmin)
-                ymin = yprime + subq
-                ymin = int(ymin)
                 
-                # Now we find the max of that range
-                xmax = xmin + subq
-                xmax = int(xmax)
-                ymax = ymin + subq
-                ymax = int(ymax)
-            
+                # Determine the min and max of the x and y values 
+                # of the subquadrant your point (x,y) is located
+                xmin, xmax, ymin, ymax = findsubq(x, y, subq)
+
                 # Now we can remove duplicate elements from the subquadrant
-                if i in range(xmin, xmax):
-                    if j in range(ymin, ymax):
-                        if not i==x and j==y:
-                            mtx[i,j] = mtx[i,j] - a
-            
+                mtx = remsubq(xmin,xmax,ymin,ymax,mtx,a)
+                
                 # Now remove duplicates in the corresponding row and column of x,y
-            
-                for i in range(0, dim):
-                    if i!= x:
-                        mtx[i,y] = mtx[i,y] - a
-                for j in range(0, dim):
-                    if j!= y:
-                        mtx[x,j] = mtx[x,j] - a            
+                mtx = remxval(dim, x, y, a, mtx)
+                mtx = remyval(dim, x, y, a, mtx)
+                        
     continue
 
 while (np.array_equal(mtx, mtxcheck) == True):
