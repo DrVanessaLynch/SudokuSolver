@@ -28,8 +28,6 @@ def knownval(mtx):
         yinput = int(input("Enter y value")) - 1
         sqval = int(input("Enter value of square"))
         mtx[xinput,yinput] = {sqval}
-        print(xinput, yinput)
-        print(mtx)
     return(mtx);  
 
 # Determine the subquadrant that (x,y) is in and the range of x and y values of that subquadrant
@@ -74,8 +72,18 @@ def remyval(dim, x, y, a, mtx):
         if j!= y:
             mtx[x,j] = mtx[x,j] - a  
     return(mtx);
-    
-                            
+
+# Check to make sure all elements of the sudoku have one value
+def checkdone(dim,mtx,mtxcheck):
+    sqsolv = 0                  # If no single values, sqsolv remains at 0 
+    for x in range(0, dim):     # and is not solved.
+        for y in range(0, dim):
+            if len(mtx[x,y])!=1:
+                sqsolv = 1      # If sqsolv = 1, sudoku is not solved
+                #print(sqsolv)
+                #continue   
+    return(sqsolv);             
+                
 # Input the dimensions of the sudoku and convert it to an integer 
 dim = int(input("Enter the value of the exterior dimension of the symmetric sudoku you wish to solve :: "))
 
@@ -85,17 +93,14 @@ subq = np.sqrt(dim) # Takes a square root
 subq = int(subq)    # Converts it to an integer
 print("Values of this sudoku range from 1 to ", dim, " with ", subq, " x ", subq, " subquadrants making up the board")
 
-
 print("Initializing sudoku board....")
 mtx = setup(dim)  # Call the setup function to create our initial matrix with all possible solutions in each square
 
 # Make a copy of the initial mtx for comparison later
 mtxcheck = np.copy(mtx)
 
-# Input values given for the sudoku
-print("Input starting known values.....")  
-
 #Enter Sudoku Starting Values
+print("Input starting known values.....")  
 mtx = knownval(mtx)
 
 print("The array we will be solving is: ")
@@ -110,11 +115,10 @@ j = 0
 # If differences occur, meaning the values of the matrix changed,
 # repeat the loop to see if further solving can be done.
 
-while (np.array_equal(mtx, mtxcheck) == False):
+while (checkdone(dim, mtx, mtxcheck) == 1):  # While there are still more than one solution per square, continue
+    
     print("We need to keep working....") 
     mtxcheck = np.copy(mtx)  # Make a new copy of the sudoku matrix
-
-    #Remove duplicate options in rows, columns and subquadrants
 
     # If the length of the set in each array position is 1, 
     # then remove that element from the remaining sets in 
@@ -128,7 +132,7 @@ while (np.array_equal(mtx, mtxcheck) == False):
         
             if len(mtx[x,y])==1: # If a set only has one element
                 a = mtx[x,y] # Save point for use later
-                print("Working....")
+                #print("Working....")
                 
                 # Determine the min and max of the x and y values 
                 # of the subquadrant your point (x,y) is located
@@ -140,13 +144,11 @@ while (np.array_equal(mtx, mtxcheck) == False):
                 # Now remove duplicates in the corresponding row and column of x,y
                 mtx = remxval(dim, x, y, a, mtx)
                 mtx = remyval(dim, x, y, a, mtx)
-                        
+ 
     continue
 
-while (np.array_equal(mtx, mtxcheck) == True):
-    print("We have done all we can do here")
-    # Need to check if the sudoku is solved.
-    # If yes, exit and print final solution
+while (checkdone(dim, mtx, mtxcheck) == 0):    # When each square has one solution, we're done!
+    print("Done!")
     # If no, use branching technique to continue solving and return here to check
     break    
     
